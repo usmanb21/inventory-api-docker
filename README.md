@@ -30,7 +30,7 @@ SQL Server Database (Docker Container)
 
 ## API Documentation
 
-Swagger UI:
+Swagger UI  is available locally after starting the containers:
 
 http://localhost:8080/swagger
 

@@ -14,6 +14,6 @@ WORKDIR /app
 
 COPY --from=build /app/out .
 
-EXPOSE 8181
+EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "inventory-cloud-api.dll"]

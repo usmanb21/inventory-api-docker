@@ -34,3 +34,5 @@ jobs:
 
     - name: Push Docker image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/inventory-api:v2
+    - name: Deploy (CD Simulation)
+      run: echo "Deployment step executed successfully 🚀"

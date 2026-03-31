@@ -1,19 +1,27 @@
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-COPY *.csproj .
+# Copy csproj and restore
+COPY *.csproj ./
 RUN dotnet restore
 
-COPY . .
+# Copy everything else and build
+COPY . ./
 RUN dotnet publish -c Release -o out
 
+# Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
+# IMPORTANT: Azure requires this port
+ENV ASPNETCORE_URLS=http://+:80
 
-
+# Copy published app
 COPY --from=build /app/out .
 
-EXPOSE 8080
+# Expose port
+EXPOSE 80
 
+# Start app
 ENTRYPOINT ["dotnet", "inventory-cloud-api.dll"]

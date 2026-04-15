@@ -15,13 +15,13 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
 # IMPORTANT: Azure requires this port
-ENV ASPNETCORE_URLS=http://+:80
+ENV ASPNETCORE_URLS=http://+:8080
 
 # Copy published app
 COPY --from=build /app/out .
 
 # Expose port
-EXPOSE 80
+EXPOSE 8080
 
 # Start app
 ENTRYPOINT ["dotnet", "inventory-cloud-api.dll"]

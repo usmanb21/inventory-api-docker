@@ -1,40 +1,32 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+// FORCE REBUILD 2026-04-20
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ KEEP this (Azure container port)
-builder.WebHost.UseUrls("http://0.0.0.0:8080");
-
-// ======================
-// Services
-// ======================
-
+// Add services
 builder.Services.AddControllers();
+
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
-
-// ======================
-// Swagger + JWT Auth
-// ======================
-
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "inventory-cloud-api",
+        Title = "Test API",
         Version = "v1"
     });
 
-    // 🔐 JWT Auth in Swagger
+    // 🔐 REQUIRED FOR AUTHORIZE BUTTON
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
+        Description = "JWT Authorization header using Bearer scheme",
         Name = "Authorization",
+        In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
         Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Enter: Bearer {your JWT token}"
+        BearerFormat = "JWT"
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -53,44 +45,21 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// ======================
-// Authentication
-// ======================
-
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+// Auth (even dummy config will still show button)
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer();
 
 builder.Services.AddAuthorization();
 
-// ======================
-// Build
-// ======================
-
 var app = builder.Build();
 
-// ======================
 // Middleware
-// ======================
-
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseAuthentication();   // ⚠️ MUST be before Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
-// ======================
-// Endpoints
-// ======================
-
 app.MapControllers();
-
-// ✅ Public endpoints
-app.MapGet("/", () => "StockFlow API is running").AllowAnonymous();
-app.MapGet("/health", () => Results.Ok("Healthy")).AllowAnonymous();
-
-// ======================
-// Run
-// ======================
 
 app.Run();

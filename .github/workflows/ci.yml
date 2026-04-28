@@ -42,4 +42,4 @@ jobs:
         with:
           app-name: stockflow-api-prod
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          images: ${{ secrets.DOCKER_USERNAME }}/inventory-api:v2
+          images: ${{ secrets.DOCKER_USERNAME }}/inventory-api:v16

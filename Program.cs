@@ -15,6 +15,8 @@ Log.Logger = new LoggerConfiguration()
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog();
+builder.Services.AddApplicationInsightsTelemetry();
+
 
 // Add services
 builder.Services.AddControllers();
